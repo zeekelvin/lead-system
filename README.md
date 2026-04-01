@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This project is a Vercel-ready local lead generation system for use across the U.S.
+
+It includes:
+
+- a seeded CRM with Andover starter leads plus nationwide live lead search
+- a demo website generator for each lead
+- on-site lead workboards with opener, hook, offer, email, voicemail, and objection scripts
+- CSV export for the working pipeline
+- live lead discovery for new cities and states using Google Places
+- search history, visited tracking, in-progress tracking, processed lead logs, and a 7-step stage tracker
+- an optional Resend-powered route that emails the selected lead brief to your inbox
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The app stores lead edits in browser `localStorage`, so you can deploy without a database and still keep your own working queue.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Resend Setup
 
-## Learn More
+If you want the "Email Brief To My Inbox" button to work, add these environment variables:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+RESEND_API_KEY=
+RESEND_FROM_EMAIL="ZagaPrime Growth OS <onboarding@resend.dev>"
+RESEND_TO_EMAIL=you@example.com
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Use `onboarding@resend.dev` while testing, then replace it with your own verified sender once your Resend domain is set up.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Live Search Setup
 
-## Deploy on Vercel
+For real-time lead discovery, add:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+GOOGLE_MAPS_API_KEY=
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This app uses Google Places Text Search from a server route, ranks operational businesses without a website first, and still shows fallback candidates if every listing in that market already has a site. A missing `websiteUri` is a strong lead signal, but it is still an inference rather than a guarantee that no website exists anywhere online.
+
+## Deploying To Vercel
+
+1. Push the repo to GitHub.
+2. Import the repo into Vercel.
+3. Add `GOOGLE_MAPS_API_KEY` for live lead discovery.
+4. Add the optional Resend environment variables if you want inbox brief delivery.
+5. Deploy.
+
+The app is database-free by default, so there is no extra infrastructure required for the first deployment.
+
+## Next Upgrade Path
+
+If you want this to become a shared multi-user tool instead of a single-browser system, the clean next steps are:
+
+1. add auth
+2. move leads into Postgres or Neon
+3. add activity history and reminders
+4. turn demo pages into shareable URLs per lead
